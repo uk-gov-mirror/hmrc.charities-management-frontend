@@ -18,8 +18,10 @@ package views
 
 import play.api.data.Form
 import play.api.data.Forms.*
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import services.PaginationStatus
 import util.ViewSpec
+
 import java.time.{Instant, ZoneId, ZonedDateTime}
 
 class ViewUtilsSpec extends ViewSpec {
@@ -159,6 +161,19 @@ class ViewUtilsSpec extends ViewSpec {
       val millis = ZonedDateTime.of(2023, 6, 15, 9, 30, 0, 0, ZoneId.of("Europe/London")).toInstant.toEpochMilli
       val result = ViewUtils.formatClaimDateTime(millis)(messages)
       result mustBe "15 Jun 2023"
+    }
+
+    "return Welsh month names when Welsh messages are used" in {
+      val messagesApi = app.injector.instanceOf[MessagesApi]
+      given Messages  = messagesApi.preferred(Seq(Lang("cy")))
+
+      val millis =
+        ZonedDateTime
+          .of(2024, 1, 1, 12, 0, 0, 0, ZoneId.of("Europe/London"))
+          .toInstant
+          .toEpochMilli
+
+      ViewUtils.formatClaimDateTime(millis) mustBe "01 Ion 2024"
     }
   }
 }

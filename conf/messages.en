@@ -39,6 +39,19 @@ error.heading = Sorry, there is a problem with this service
 error.p = You do not have access to this service.
 error.signInLink = Continue to your account
 
+month.1.short=Jan
+month.10.short=Oct
+month.11.short=Nov
+month.12.short=Dec
+month.2.short=Feb
+month.3.short=Mar
+month.4.short=Apr
+month.5.short=May
+month.6.short=Jun
+month.7.short=Jul
+month.8.short=Aug
+month.9.short=Sep
+
 #Timeout dialog
 session-expired.keep-alive-button-text=Continue
 session-expired.sign-out-button-text=Sign-out
