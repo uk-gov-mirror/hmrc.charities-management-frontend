@@ -16,13 +16,11 @@
 
 package views
 
-import play.api.i18n.Messages
 import play.api.data.Form
+import play.api.i18n.Messages
 import services.PaginationStatus
-import java.time.format.DateTimeFormatter
-import java.time.ZonedDateTime
-import java.time.Instant
-import java.time.ZoneId
+
+import java.time.{Instant, ZoneId, ZonedDateTime}
 
 object ViewUtils {
 
@@ -75,8 +73,6 @@ object ViewUtils {
   private def errorPrefix(form: Form[?])(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors) messages("error.browser.title.prefix") else ""
 
-  val claimDateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-
   def formatClaimDateTime(lastVisitedAt: Long)(implicit messages: Messages): String =
     val date  = ZonedDateTime.ofInstant(Instant.ofEpochMilli(lastVisitedAt), ZoneId.of("Europe/London"))
     val today = ZonedDateTime.ofInstant(Instant.now(), ZoneId.of("Europe/London")).toLocalDate
@@ -85,7 +81,9 @@ object ViewUtils {
     } else if (date.toLocalDate.isEqual(today.minusDays(1))) {
       messages("date.yesterday")
     } else {
-      claimDateTimeFormatter.format(date)
+      val day   = f"${date.getDayOfMonth}%02d"
+      val month = messages(s"month.${date.getMonthValue}.short")
+      s"$day $month ${date.getYear}"
     }
 
 }

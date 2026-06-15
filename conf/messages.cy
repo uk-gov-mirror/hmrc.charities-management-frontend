@@ -61,6 +61,19 @@ error.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 error.p = Nid oes gennych fynediad at y gwasanaeth hwn.
 error.signInLink = Parhau i’ch cyfrif
 
+month.1.short=Ion
+month.10.short=Hyd
+month.11.short=Tach
+month.12.short=Rhag
+month.2.short=Chwef
+month.3.short=Maw
+month.4.short=Ebr
+month.5.short=Mai
+month.6.short=Meh
+month.7.short=Gorff
+month.8.short=Awst
+month.9.short=Medi
+
 timedOut.title = Er eich diogelwch, gwnaethom eich allgofnodi
 timedOut.heading = Er eich diogelwch, gwnaethom eich allgofnodi
 timedOut.button = Mewngofnodi
