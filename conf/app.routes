@@ -9,7 +9,7 @@ GET        /start                                    controllers.StartController
 
 GET        /keep-alive                               controllers.StartController.keepAlive
 
-GET        /timed-out                                controllers.StartController.timedOut
+GET        /service-timeout                          controllers.StartController.timedOut
 
 GET        /manage-charity-repayment-claim           controllers.CharitiesRepaymentDashboardController.onPageLoad
 

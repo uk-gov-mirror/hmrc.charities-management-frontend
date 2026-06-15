@@ -28,7 +28,7 @@ class StartControllerISpec
 
   private val startUrl = "/start"
   private val keepAliveUrl = "/keep-alive"
-  private val timedOutUrl = "/timed-out"
+  private val timedOutUrl = "/service-timeout"
 
   "GET /start" should {
     "redirect to HomeController" in {
