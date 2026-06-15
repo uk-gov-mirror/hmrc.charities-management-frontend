@@ -49,7 +49,7 @@
             countdown = Some(appConfig.countdownInSeconds),
             keepAliveUrl= Some(s"${routes.StartController.keepAlive.url}"),
             signOutUrl= Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.feedbackUrl, "UTF-8")}"),
-            timeoutUrl= Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.baseUrl + routes.StartController.start.url, "UTF-8")}"),
+            timeoutUrl= Some(s"${appConfig.signOutUrl}?continue=${URLEncoder.encode(appConfig.baseUrl + routes.StartController.timedOut.url, "UTF-8")}"),
             language = Some(messages.lang.code),
             synchroniseTabs = Some(true)
             )
