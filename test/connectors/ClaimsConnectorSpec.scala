@@ -34,17 +34,17 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   val config: Configuration = Configuration(
     ConfigFactory.parseString(
       """
-        | microservice {
+        |microservice {
         |   services {
         |     charities-claims {
         |       protocol = http
         |       host     = foo.bar.com
         |       port     = 1234
-        |       retryIntervals = [10ms,50ms]
         |       context-path = "/charities-claims"
         |     }
         |   }
-        | }
+        |}
+        |http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -52,7 +52,7 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
   val connector =
     new ClaimsConnectorImpl(
       http = mockHttp,
-      configuration = config,
+      config = config,
       servicesConfig = new ServicesConfig(config),
       actorSystem = actorSystem
     )
@@ -69,15 +69,6 @@ class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
     "http://foo.bar.com:1234/charities-claims/charities/agents/AGENT123"
 
   "ClaimsConnector" - {
-
-    "retry configuration" - {
-      "should load retry intervals from config" in {
-        connector.retryIntervals shouldBe Seq(
-          FiniteDuration(10, "ms"),
-          FiniteDuration(50, "ms")
-        )
-      }
-    }
 
     "retrieveUnsubmittedClaims" - {
 
