@@ -41,7 +41,6 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
         |       protocol = http
         |       host     = foo.bar.com
         |       port     = 1234
-        |       retryIntervals = [10ms,50ms]
         |     }
         |   }
         | }
@@ -49,6 +48,7 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
         |   serviceName = charities
         |   allowListName = beta
         | }
+        | http-verbs.retries.intervals = [10ms,50ms]
         |""".stripMargin
     )
   )
@@ -56,7 +56,7 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
   val connector =
     new RateLimitedAllowListConnectorImpl(
       http = mockHttp,
-      configuration = config,
+      config = config,
       servicesConfig = new ServicesConfig(config),
       actorSystem = actorSystem
     )
@@ -67,15 +67,6 @@ class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
     "http://foo.bar.com:1234/rate-limited-allow-list/services/charities/features/test-feature"
 
   "RateLimitedAllowListConnector" - {
-
-    "retry configuration" - {
-      "should load retry intervals from config" in {
-        connector.retryIntervals shouldBe Seq(
-          FiniteDuration(10, "ms"),
-          FiniteDuration(50, "ms")
-        )
-      }
-    }
 
     "checkAllowList" - {
 
