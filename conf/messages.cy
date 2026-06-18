@@ -1,8 +1,8 @@
-service.name = Gwneud hawliad ad-daliad treth elusenau
+service.name = Gwneud hawliad am ad-daliad treth elusennau
 service.text = Dyma'ch gwasanaeth newydd
 
 #Charity Repayment Organisation Landing Page
-charityRepaymentDashboard.title = Rheoli hawliad ad-daliad elusennau - Gwneud hawliad ad-daliad treth elusenau - GOV.UK
+charityRepaymentDashboard.title = Rheoli hawliad ad-daliad elusennau - Gwneud hawliad am ad-daliad treth elusennau - GOV.UK
 charityRepaymentDashboard.heading = Rheoli hawliad ad-daliad elusennau
 charityRepaymentDashboard.caption.name = {0}
 charityRepaymentDashboard.caption.ref = Cyfeirnod Elusennau CThEF: {0}
@@ -56,7 +56,7 @@ global.error.pageNotFound404.heading = Heb ddod o hyd i’r dudalen
 global.error.pageNotFound404.message = Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.<br>Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.<br>Os yw’r cyfeiriad gwe yn gywir, neu os dewisoch gysylltiad neu fotwm, cysylltwch â <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">au Ar-lein CThEF (yn agor tab newydd)</a> os oes angen i chi siarad â rhywun.
 
 #Error Page
-error.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth - Gwneud hawliad ad-daliad treth elusenau - GOV.UK
+error.title = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth - Gwneud hawliad am ad-daliad treth elusennau - GOV.UK
 error.heading = Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 error.p = Nid oes gennych fynediad at y gwasanaeth hwn.
 error.signInLink = Parhau i’ch cyfrif
