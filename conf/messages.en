@@ -72,11 +72,12 @@ date.yesterday = Yesterday
 
 global.error.InternalServerError500.heading = Sorry, there is a problem with this service
 global.error.InternalServerError500.message = Try again later or contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a>.
-global.error.InternalServerError500.title = Sorry, there is a problem with this service
+global.error.InternalServerError500.title = Sorry, there is a problem with this service - Make a charity tax repayment claim - GOV.UK
 global.error.accessDenied.heading = Sorry, there is a problem with this service
 global.error.accessDenied.message = You do not have access to this service.<br><a class="govuk-link" rel="noreferrer noopener" href="{0}">Continue to your account</a>.
-global.error.accessDenied.title = Sorry, there is a problem with this service
+global.error.accessDenied.title = Sorry, there is a problem with this service - Make a charity tax repayment claim - GOV.UK
 global.error.pageNotFound404.heading = Page not found
+global.error.pageNotFound404.title = Page not found - Make a charity tax repayment claim - GOV.UK
 global.error.pageNotFound404.message = If you typed the web address, check it is correct.<br>If you pasted the web address, check you copied the entire address.<br>If the web address is correct or you selected a link or button, contact the <a class="govuk-link" rel="noreferrer noopener" href="https://www.gov.uk/find-hmrc-contacts/technical-support-with-hmrc-online-services" target="_blank">HMRC Online Services Helpdesk (opens in new tab)</a> if you need to speak to someone.
 
 timedOut.title = For your security, we signed you out
