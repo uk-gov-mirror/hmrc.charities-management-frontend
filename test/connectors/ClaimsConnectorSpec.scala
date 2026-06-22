@@ -16,17 +16,17 @@
 
 package connectors
 
-import com.typesafe.config.ConfigFactory
+import util.{BaseSpec, HttpV2Support}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import models.{GetAgentReferenceResponse, GetClaimsResponse, GetOrganisationReferenceResponse}
+import play.api.test.Helpers.*
+import com.typesafe.config.ConfigFactory
 import play.api.Configuration
 import play.api.libs.json.Json
-import play.api.test.Helpers.*
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import util.{BaseSpec, HttpV2Support}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ClaimsConnectorSpec extends BaseSpec with HttpV2Support {
 

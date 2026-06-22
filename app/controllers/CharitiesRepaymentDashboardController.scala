@@ -31,11 +31,13 @@ import scala.concurrent.{ExecutionContext, Future}
 import javax.inject.Inject
 import services.PaginationService
 import javax.inject.Singleton
+import controllers.actions.SplitterAction
 
 @Singleton
 class CharitiesRepaymentDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   @Named("identifyAuth") authorisedAction: BaseAuthorisedAction,
+  splitterAction: SplitterAction,
   config: AppConfig,
   claimsConnector: ClaimsConnector,
   organisationView: CharityRepaymentDashboardView,
@@ -44,57 +46,59 @@ class CharitiesRepaymentDashboardController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = authorisedAction
-    .async { implicit request =>
-      request.charityUser.referenceId match {
-        case Some(referenceId) if request.charityUser.userType == UserType.Organisation =>
-          for
-            orgName           <- claimsConnector.getOrganisationName(referenceId).map(_.organisationName)
-            getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
-          yield Ok(
-            organisationView(
-              referenceId,
-              if getClaimsResponse.claimsCount == 1 then config.makeCharityRepaymentClaimUrl
-              else config.makeCharityRepaymentClaimUrl + "?claimId=blank",
-              orgName,
-              config.giftAidOtherIncomeCommunityBuildingsUrl,
-              config.hmrcServicesHomeUrl,
-              getClaimsResponse.claimsCount == 1,
-              config.hmrcRecognisedSoftwareUrl
-            )
-          )
-
-        case Some(referenceId) if request.charityUser.userType == UserType.Agent =>
-          for
-            agentName         <- claimsConnector.getAgentName(referenceId).map(_.agentName)
-            getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
-          yield {
-            val currentPage = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
-            val paginationResult = PaginationService.paginateClaims(
-              allClaims = getClaimsResponse.claimsList,
-              currentPage = currentPage,
-              baseUrl = routes.CharitiesRepaymentDashboardController.onPageLoad.url
-            )
-            Ok(
-              agentView(
+  def onPageLoad: Action[AnyContent] =
+    authorisedAction
+      .andThen(splitterAction)
+      .async { implicit request =>
+        request.charityUser.referenceId match {
+          case Some(referenceId) if request.charityUser.userType == UserType.Organisation =>
+            for
+              orgName           <- claimsConnector.getOrganisationName(referenceId).map(_.organisationName)
+              getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
+            yield Ok(
+              organisationView(
                 referenceId,
-                config.makeCharityRepaymentClaimUrl,
-                config.makeCharityRepaymentClaimAgentUrl + "?claimId=blank",
-                config.deleteAgentClaimUrl + "?claimId={claimId}",
-                agentName,
+                if getClaimsResponse.claimsCount == 1 then config.makeCharityRepaymentClaimUrl
+                else config.makeCharityRepaymentClaimUrl + "?claimId=blank",
+                orgName,
                 config.giftAidOtherIncomeCommunityBuildingsUrl,
                 config.hmrcServicesHomeUrl,
-                config.hmrcRecognisedSoftwareUrl,
-                paginationViewModel = paginationResult.paginationViewModel,
-                paginationStatus = paginationResult,
-                claims = paginationResult.paginatedData
+                getClaimsResponse.claimsCount == 1,
+                config.hmrcRecognisedSoftwareUrl
               )
             )
-          }
 
-        case _ =>
-          Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
+          case Some(referenceId) if request.charityUser.userType == UserType.Agent =>
+            for
+              agentName         <- claimsConnector.getAgentName(referenceId).map(_.agentName)
+              getClaimsResponse <- claimsConnector.retrieveUnsubmittedClaims
+            yield {
+              val currentPage = request.getQueryString("page").flatMap(_.toIntOption).getOrElse(1)
+              val paginationResult = PaginationService.paginateClaims(
+                allClaims = getClaimsResponse.claimsList,
+                currentPage = currentPage,
+                baseUrl = routes.CharitiesRepaymentDashboardController.onPageLoad.url
+              )
+              Ok(
+                agentView(
+                  referenceId,
+                  config.makeCharityRepaymentClaimUrl,
+                  config.makeCharityRepaymentClaimAgentUrl + "?claimId=blank",
+                  config.deleteAgentClaimUrl + "?claimId={claimId}",
+                  agentName,
+                  config.giftAidOtherIncomeCommunityBuildingsUrl,
+                  config.hmrcServicesHomeUrl,
+                  config.hmrcRecognisedSoftwareUrl,
+                  paginationViewModel = paginationResult.paginationViewModel,
+                  paginationStatus = paginationResult,
+                  claims = paginationResult.paginatedData
+                )
+              )
+            }
+
+          case _ =>
+            Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
+        }
       }
-    }
 
 }
