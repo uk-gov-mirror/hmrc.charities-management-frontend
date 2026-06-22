@@ -27,6 +27,7 @@ import play.api.Configuration
 import connectors.RateLimitedAllowListConnector
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
+import controllers.actions.SplitterAction
 
 class HomeControllerSpec extends ControllerSpecBase {
 
@@ -120,12 +121,14 @@ class HomeControllerSpec extends ControllerSpecBase {
   private def controller(userType: UserType, useRateLimitedAllowList: Boolean, isUserAllowed: Option[String => Boolean]): HomeController =
     new HomeController(
       cc,
-      appConfig(useRateLimitedAllowList),
-      new RateLimitedAllowListConnector {
-        override def checkAllowList(feature: String, charityReference: String)(using hc: HeaderCarrier): Future[Boolean] =
-          Future.successful(isUserAllowed.map(_(charityReference)).getOrElse(false))
-      },
-      authorisedAction(userType)
+      authorisedAction(userType),
+      new SplitterAction(
+        appConfig(useRateLimitedAllowList),
+        new RateLimitedAllowListConnector {
+          override def checkAllowList(feature: String, charityReference: String)(using hc: HeaderCarrier): Future[Boolean] =
+            Future.successful(isUserAllowed.map(_(charityReference)).getOrElse(false))
+        }
+      )
     )
 
   private def authorisedAction(userType: UserType) =

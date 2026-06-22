@@ -19,7 +19,7 @@ package connectors
 import util.{BaseSpec, HttpV2Support}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import models.AllowListCheckRequest
+import models.{AllowListCheckRequest, AllowListCheckResponse}
 import play.api.test.Helpers.*
 import com.typesafe.config.ConfigFactory
 import play.api.Configuration
@@ -27,7 +27,6 @@ import play.api.libs.json.Json
 
 import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
-import models.AllowListCheckResponse
 
 class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
 

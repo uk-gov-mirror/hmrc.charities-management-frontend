@@ -16,48 +16,33 @@
 
 package controllers
 
-import javax.inject.Singleton
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import controllers.actions.{BaseAuthorisedAction, SplitterAction}
 import com.google.inject.name.Named
-import controllers.actions.BaseAuthorisedAction
-import models.requests.UserType.{Agent, Organisation}
 import play.api.Logging
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 
-import javax.inject.Inject
-import scala.concurrent.Future
-import connectors.RateLimitedAllowListConnector
-import config.AppConfig
-import scala.concurrent.ExecutionContext
+import javax.inject.{Inject, Singleton}
+import models.requests.UserType
 
 @Singleton
 class HomeController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  appConfig: AppConfig,
-  rateLimitedAllowListConnector: RateLimitedAllowListConnector,
-  @Named("identifyAuth") identifyUser: BaseAuthorisedAction
-)(implicit ec: ExecutionContext)
-    extends FrontendBaseController
+  @Named("identifyAuth") identifyUser: BaseAuthorisedAction,
+  splitterAction: SplitterAction
+) extends FrontendBaseController
     with I18nSupport
     with Logging {
 
-  def landingPage: Action[AnyContent] = identifyUser.async { implicit request =>
-    request.charityUser.userType match {
-      case Organisation | Agent =>
-        for {
-          isAllowed <-
-            if appConfig.useRateLimitedAllowList
-            then rateLimitedAllowListConnector.checkAllowList(appConfig.splitterAllowListName, request.charityUser.referenceId.get)
-            else Future.successful(true)
-        } yield
-          if isAllowed
-          then Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
-          else Redirect(appConfig.legacyCharitiesServiceUrl)
-
-      case _ =>
-        logger.warn(s"Unrecognised user type, redirecting to access denied")
-        Future.successful(Redirect(controllers.routes.AccessDeniedController.onPageLoad))
-    }
-  }
+  def landingPage: Action[AnyContent] =
+    identifyUser
+      .andThen(splitterAction) { implicit request =>
+        request.charityUser.userType match {
+          case UserType.Organisation | UserType.Agent =>
+            Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
+          case _ =>
+            Redirect(controllers.routes.AccessDeniedController.onPageLoad)
+        }
+      }
 }

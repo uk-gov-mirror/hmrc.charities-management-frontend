@@ -28,8 +28,15 @@ import util.ControllerSpecBase
 import views.html.{CharityRepaymentDashboardAgentView, CharityRepaymentDashboardView}
 
 import scala.concurrent.Future
+import controllers.actions.SplitterAction
+import connectors.RateLimitedAllowListConnector
+import play.api.Configuration
 
 class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
+
+  val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+  when(mockRateLimitedAllowListConnector.checkAllowList(any(), any())(using any()))
+    .thenReturn(Future.successful(true))
 
   "CharitiesRepaymentDashboardController onPageLoad" should {
 
@@ -50,6 +57,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val controller = new CharitiesRepaymentDashboardController(
         cc,
         fakeOrg(orgId),
+        new SplitterAction(mockConfig, mockRateLimitedAllowListConnector),
         mockConfig,
         mockConnector,
         mockOrgView,
@@ -61,6 +69,47 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       status(result) mustBe OK
       contentAsString(result) must include("Org View")
       verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any())
+    }
+
+    "redirect to legacy charities service url when the user is not allowed" in {
+      val appConfig = AppConfig(
+        Configuration.from(
+          Map(
+            "splitter.trafficSplitEnabled"   -> true,
+            "splitter.allowListName"         -> "beta-test",
+            "urls.legacyCharitiesServiceUrl" -> "http://localhost:9020/charities"
+          )
+        )
+      )
+      val mockConnector                     = mock[ClaimsConnector]
+      val orgId                             = "test-org-123"
+      val mockOrgView                       = mock[CharityRepaymentDashboardView]
+      val mockAgentView                     = mock[CharityRepaymentDashboardAgentView]
+      val mockRateLimitedAllowListConnector = mock[RateLimitedAllowListConnector]
+
+      when(mockRateLimitedAllowListConnector.checkAllowList(any(), any())(using any()))
+        .thenReturn(Future.successful(false))
+      when(mockConnector.retrieveUnsubmittedClaims(using any()))
+        .thenReturn(Future.successful(GetClaimsResponse(claimsList = List.empty, claimsCount = 0)))
+      when(mockConnector.getOrganisationName(any())(using any()))
+        .thenReturn(Future.successful(GetOrganisationReferenceResponse(Some("Test Org"))))
+      when(mockOrgView.apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any()))
+        .thenReturn(Html("<p>Org View</p>"))
+
+      val controller = new CharitiesRepaymentDashboardController(
+        cc,
+        fakeOrg(orgId),
+        new SplitterAction(appConfig, mockRateLimitedAllowListConnector),
+        appConfig,
+        mockConnector,
+        mockOrgView,
+        mockAgentView
+      )
+
+      val result = controller.onPageLoad(FakeRequest())
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some("http://localhost:9020/charities")
     }
 
     "pass claimsCount == 1 as true to org view when exactly one claim exists" in {
@@ -80,6 +129,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val controller = new CharitiesRepaymentDashboardController(
         cc,
         fakeOrg(orgId),
+        new SplitterAction(mockConfig, mockRateLimitedAllowListConnector),
         mockConfig,
         mockConnector,
         mockOrgView,
@@ -109,6 +159,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val controller = new CharitiesRepaymentDashboardController(
         cc,
         fakeAgent(agentId),
+        new SplitterAction(mockConfig, mockRateLimitedAllowListConnector),
         mockConfig,
         mockConnector,
         mockOrgView,
@@ -140,6 +191,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val controller = new CharitiesRepaymentDashboardController(
         cc,
         fakeAgent(agentId),
+        new SplitterAction(mockConfig, mockRateLimitedAllowListConnector),
         mockConfig,
         mockConnector,
         mockOrgView,
@@ -160,6 +212,7 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val controller = new CharitiesRepaymentDashboardController(
         cc,
         fakeIndividual,
+        new SplitterAction(mockConfig, mockRateLimitedAllowListConnector),
         mockConfig,
         mockConnector,
         mockOrgView,
