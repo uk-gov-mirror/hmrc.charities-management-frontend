@@ -27,7 +27,6 @@ import play.api.libs.json.Json
 
 import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.FiniteDuration
 import models.AllowListCheckResponse
 
 class RateLimitedAllowListConnectorSpec extends BaseSpec with HttpV2Support {
