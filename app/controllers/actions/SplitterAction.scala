@@ -24,9 +24,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import models.requests.AuthorisedRequest
+import models.requests.UserType.*
 
 import scala.concurrent.{ExecutionContext, Future}
-
 import javax.inject.{Inject, Singleton}
 
 @Singleton
@@ -53,6 +53,16 @@ class SplitterAction @Inject() (
     } yield
       if isAllowed
       then Right(request)
-      else Left(Redirect(appConfig.legacyCharitiesServiceUrl))
+      else {
+        val userTypeText = request.charityUser.userType match {
+          case Organisation => "org"
+          case Agent        => "agent"
+        }
+
+        val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId}/at-a-glance?lang=eng"
+        logger.info(s"Redirecting to charities legacy service to $url")
+
+        Left(Redirect(url))
+      }
   }
 }

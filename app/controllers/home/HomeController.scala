@@ -53,7 +53,17 @@ class HomeController @Inject() (
         } yield
           if isAllowed
           then Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
-          else Redirect(appConfig.legacyCharitiesServiceUrl)
+          else {
+            val userTypeText = request.charityUser.userType match {
+              case Organisation => "org"
+              case Agent        => "agent"
+            }
+
+            val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId}/at-a-glance?lang=eng"
+            logger.info(s"Redirecting to charities legacy service to $url")
+
+            Redirect(url)
+          }
 
       case _ =>
         logger.warn(s"Unrecognised user type, redirecting to access denied")
