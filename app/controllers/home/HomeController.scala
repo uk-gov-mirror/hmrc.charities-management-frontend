@@ -59,7 +59,7 @@ class HomeController @Inject() (
               case Agent        => "agent"
             }
 
-            val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId}/at-a-glance?lang=eng"
+            val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId.get}/at-a-glance?lang=eng"
             logger.info(s"Redirecting to charities legacy service to $url")
 
             Redirect(url)
