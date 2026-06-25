@@ -42,7 +42,7 @@ class HomeController @Inject() (
     with I18nSupport
     with Logging {
 
-  def landingPage: Action[AnyContent] = identifyUser.async { implicit request =>
+  def landingPage(path: String): Action[AnyContent] = identifyUser.async { implicit request =>
     request.charityUser.userType match {
       case Organisation | Agent =>
         for {
@@ -55,8 +55,8 @@ class HomeController @Inject() (
           then Redirect(controllers.routes.CharitiesRepaymentDashboardController.onPageLoad)
           else {
             val userTypeText = request.charityUser.userType match {
-              case Organisation => "org"
-              case Agent        => "agent"
+              case Agent => "agent"
+              case _     => "org"
             }
 
             val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId.get}/at-a-glance?lang=eng"

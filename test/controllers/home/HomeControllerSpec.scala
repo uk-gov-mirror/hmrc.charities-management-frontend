@@ -47,7 +47,7 @@ class HomeControllerSpec extends ControllerSpecBase {
   "HomeController landingPage" should {
 
     "redirect Organisation users to the organisation dashboard" in {
-      val result = controller(UserType.Organisation, useRateLimitedAllowList = false, isUserAllowed = None).landingPage(request)
+      val result = controller(UserType.Organisation, useRateLimitedAllowList = false, isUserAllowed = None).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -55,7 +55,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect Agent users to the agent dashboard" in {
-      val result = controller(UserType.Agent, useRateLimitedAllowList = false, isUserAllowed = None).landingPage(request)
+      val result = controller(UserType.Agent, useRateLimitedAllowList = false, isUserAllowed = None).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -63,7 +63,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect Individual users to access denied" in {
-      val result = controller(UserType.Individual, useRateLimitedAllowList = false, isUserAllowed = None).landingPage(request)
+      val result = controller(UserType.Individual, useRateLimitedAllowList = false, isUserAllowed = None).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -71,7 +71,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect Organisation users to the organisation dashboard if trafic split is enabled and user is allowed" in {
-      val result = controller(UserType.Organisation, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage(request)
+      val result = controller(UserType.Organisation, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -79,7 +79,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect Agent users to the agent dashboard if trafic split is enabled and user is allowed" in {
-      val result = controller(UserType.Agent, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage(request)
+      val result = controller(UserType.Agent, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -87,7 +87,7 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     "redirect Individual users to access denied if trafic split is enabled and user is allowed" in {
-      val result = controller(UserType.Individual, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage(request)
+      val result = controller(UserType.Individual, useRateLimitedAllowList = true, isUserAllowed = Some(_ => true)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
@@ -95,21 +95,21 @@ class HomeControllerSpec extends ControllerSpecBase {
     }
 
     /*    "redirect Organisation users to the organisation dashboard if trafic split is enabled and user is not allowed" in {
-      val result = controller(UserType.Organisation, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage(request)
+      val result = controller(UserType.Organisation, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe "http://localhost:9020/charities"
     }
 
     "redirect Agent users to the agent dashboard if trafic split is enabled and user is not allowed" in {
-      val result = controller(UserType.Agent, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage(request)
+      val result = controller(UserType.Agent, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe "http://localhost:9020/charities"
     }*/
 
     "redirect Individual users to access denied if trafic split is enabled and user is not allowed" in {
-      val result = controller(UserType.Individual, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage(request)
+      val result = controller(UserType.Individual, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
       redirectLocation(result).value mustBe
