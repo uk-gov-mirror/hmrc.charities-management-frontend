@@ -55,8 +55,8 @@ class SplitterAction @Inject() (
       then Right(request)
       else {
         val userTypeText = request.charityUser.userType match {
-          case Organisation => "org"
-          case Agent        => "agent"
+          case Agent => "agent"
+          case _     => "org"
         }
 
         val url = s"${appConfig.legacyCharitiesServiceUrl}/$userTypeText/${request.charityUser.referenceId.get}/at-a-glance?lang=eng"
