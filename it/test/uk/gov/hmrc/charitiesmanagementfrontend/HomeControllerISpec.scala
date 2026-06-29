@@ -26,13 +26,13 @@ class HomeControllerISpec extends ComponentSpecHelper with AuthStub {
   
   "GET /" should {
 
-/*    "redirect to charities repayment dashboard for Organisation/Agent" in {
+    "redirect to charities repayment dashboard for Organisation/Agent" in {
       stubAuthRequest()
 
       val result = get("/")
       result.status shouldBe SEE_OTHER
       result.header(LOCATION).value shouldBe controllers.routes.CharitiesRepaymentDashboardController.onPageLoad.url
-    }*/
+    }
   }
 
   "redirect Individual user to access denied" in {

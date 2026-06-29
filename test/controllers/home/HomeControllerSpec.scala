@@ -25,6 +25,8 @@ import util.ControllerSpecBase
 import config.AppConfig
 import play.api.Configuration
 import connectors.RateLimitedAllowListConnector
+import controllers.actions.SplitterAction
+
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -39,7 +41,7 @@ class HomeControllerSpec extends ControllerSpecBase {
         Map(
           "splitter.trafficSplitEnabled"   -> useRateLimitedAllowList,
           "splitter.allowListName"         -> "beta-test",
-          "urls.legacyCharitiesServiceUrl" -> "http://localhost:9020/charities"
+          "urls.legacyCharitiesServiceUrl" -> "http://localhost:9020/charities-legacy"
         )
       )
     )
@@ -94,19 +96,19 @@ class HomeControllerSpec extends ControllerSpecBase {
         controllers.routes.AccessDeniedController.onPageLoad.url
     }
 
-    /*    "redirect Organisation users to the organisation dashboard if trafic split is enabled and user is not allowed" in {
+    "redirect Organisation users to the organisation dashboard if trafic split is enabled and user is not allowed" in {
       val result = controller(UserType.Organisation, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe "http://localhost:9020/charities"
+      redirectLocation(result).value mustBe "http://localhost:9020/charities-legacy/org/test-user-123/at-a-glance?lang=eng"
     }
 
     "redirect Agent users to the agent dashboard if trafic split is enabled and user is not allowed" in {
       val result = controller(UserType.Agent, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result).value mustBe "http://localhost:9020/charities"
-    }*/
+      redirectLocation(result).value mustBe "http://localhost:9020/charities-legacy/agent/test-agent-id/at-a-glance?lang=eng"
+    }
 
     "redirect Individual users to access denied if trafic split is enabled and user is not allowed" in {
       val result = controller(UserType.Individual, useRateLimitedAllowList = true, isUserAllowed = Some(_ => false)).landingPage("")(request)
@@ -125,7 +127,14 @@ class HomeControllerSpec extends ControllerSpecBase {
         override def checkAllowList(feature: String, charityReference: String)(using hc: HeaderCarrier): Future[Boolean] =
           Future.successful(isUserAllowed.map(_(charityReference)).getOrElse(false))
       },
-      authorisedAction(userType)
+      authorisedAction(userType),
+      new SplitterAction(
+        appConfig(useRateLimitedAllowList),
+        new RateLimitedAllowListConnector {
+          override def checkAllowList(feature: String, charityReference: String)(using hc: HeaderCarrier): Future[Boolean] =
+            Future.successful(isUserAllowed.map(_(charityReference)).getOrElse(false))
+        }
+      )
     )
 
   private def authorisedAction(userType: UserType) =

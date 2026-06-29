@@ -71,13 +71,13 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       verify(mockOrgView).apply(eqTo(orgId), any(), any(), any(), any(), any(), any())(any(), any())
     }
 
-    /*"redirect to legacy charities service url when the user is not allowed" in {
+    "redirect to legacy charities service url when the user is not allowed" in {
       val appConfig = AppConfig(
         Configuration.from(
           Map(
             "splitter.trafficSplitEnabled"   -> true,
             "splitter.allowListName"         -> "beta-test",
-            "urls.legacyCharitiesServiceUrl" -> "http://localhost:9020/charities"
+            "urls.legacyCharitiesServiceUrl" -> "http://localhost:9020/charities-legacy"
           )
         )
       )
@@ -109,8 +109,8 @@ class CharitiesRepaymentDashboardControllerSpec extends ControllerSpecBase {
       val result = controller.onPageLoad(FakeRequest())
 
       status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some("http://localhost:9020/charities")
-    }*/
+      redirectLocation(result) mustBe Some(s"http://localhost:9020/charities-legacy/org/$orgId/at-a-glance?lang=eng")
+    }
 
     "pass claimsCount == 1 as true to org view when exactly one claim exists" in {
       val mockConfig    = mock[AppConfig]

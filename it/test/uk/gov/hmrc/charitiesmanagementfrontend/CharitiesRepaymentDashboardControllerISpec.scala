@@ -28,7 +28,7 @@ class CharitiesRepaymentDashboardControllerISpec extends ComponentSpecHelper wit
 
   private val claimId   = "AB123"
   private val reference = "1234567890"
-  /*"GET /manage-charity-repayment-claim" should {
+  "GET /manage-charity-repayment-claim" should {
 
     "return 200 and redirect to org view for Organisation user" in {
       val getClaimsResponse =
@@ -69,5 +69,5 @@ class CharitiesRepaymentDashboardControllerISpec extends ComponentSpecHelper wit
       result.status shouldBe OK
       Jsoup.parse(result.body).title should include(msg("charityRepaymentDashboardAgent.title"))
     }
-  }*/
+  }
 }
