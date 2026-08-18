@@ -38,13 +38,6 @@ final case class ClaimData(
   organisationDetails: Option[OrganisationDetails] = None,
   understandFalseStatements: Option[Boolean] = None,
   includedAnyAdjustmentsInClaimPrompt: Option[String] = None
-//                            giftAidSmallDonationsSchemeDonationDetails: Option[GiftAidSmallDonationsSchemeDonationDetails] = None,
-//                            giftAidScheduleFileUploadReference: Option[FileUploadReference] = None,
-//                            otherIncomeScheduleFileUploadReference: Option[FileUploadReference] = None,
-//                            communityBuildingsScheduleFileUploadReference: Option[FileUploadReference] = None,
-//                            connectedCharitiesScheduleFileUploadReference: Option[FileUploadReference] = None,
-//                            adjustmentForOtherIncomePreviousOverClaimed: Option[BigDecimal] = None,
-//                            prevOverclaimedGiftAid: Option[BigDecimal] = None
 )
 
 object ClaimData {

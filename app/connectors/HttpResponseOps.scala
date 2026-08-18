@@ -38,7 +38,6 @@ object HttpResponseOps {
         path.fold[JsLookupResult](JsDefined(response.json))(response.json \ _)
       ) match {
         case Success(jsLookupResult) =>
-          // use Option here to filter out null values
           jsLookupResult.toOption
             .flatMap(Option(_))
             .fold[Either[String, A]](
@@ -46,7 +45,6 @@ object HttpResponseOps {
             )(
               _.validate[A].fold[Either[String, A]](
                 errors =>
-                  // there was JSON in the response but we couldn't read it
                   Left(
                     s"could not parse http response JSON: ${JsError(errors).prettyPrint()}"
                   ),
@@ -54,7 +52,6 @@ object HttpResponseOps {
               )
             )
         case Failure(error) =>
-          // response.json failed in this case - there was no JSON in the response
           Left(s"could not read http response as JSON: ${error.getMessage}")
       }
 

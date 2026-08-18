@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class GetOrganisationReferenceResponse(
-  organisationName: Option[String] // name of the organisation
+  organisationName: Option[String]
 )
 
 object GetOrganisationReferenceResponse {

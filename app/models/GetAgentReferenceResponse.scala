@@ -20,7 +20,7 @@ import play.api.libs.json.Format
 import play.api.libs.json.Json
 
 final case class GetAgentReferenceResponse(
-  agentName: String // name of the Agent
+  agentName: String
 )
 
 object GetAgentReferenceResponse {
